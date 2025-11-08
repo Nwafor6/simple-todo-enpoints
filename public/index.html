@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Todo API Documentation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .base-url {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #495057;
+            margin: 20px 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .endpoint {
+            border-bottom: 1px solid #eee;
+            padding: 30px;
+        }
+
+        .endpoint:last-child {
+            border-bottom: none;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .method {
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9em;
+            min-width: 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .method.get {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .method.post {
+            background: linear-gradient(45deg, #007bff, #6610f2);
+        }
+
+        .method.put {
+            background: linear-gradient(45deg, #ffc107, #fd7e14);
+        }
+
+        .method.patch {
+            background: linear-gradient(45deg, #17a2b8, #6f42c1);
+        }
+
+        .method.delete {
+            background: linear-gradient(45deg, #dc3545, #e83e8c);
+        }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .endpoint-description {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h4 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .code-header {
+            background: #4a5568;
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        pre {
+            margin: 0;
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .params-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .params-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .params-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .required {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .type {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .status-code {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: white;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+
+        .status-200 {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .status-201 {
+            background: linear-gradient(45deg, #007bff, #6610f2);
+        }
+
+        .status-400 {
+            background: linear-gradient(45deg, #ffc107, #fd7e14);
+        }
+
+        .status-401 {
+            background: linear-gradient(45deg, #dc3545, #e83e8c);
+        }
+
+        .status-403 {
+            background: linear-gradient(45deg, #6f42c1, #e83e8c);
+        }
+
+        .status-404 {
+            background: linear-gradient(45deg, #dc3545, #fd7e14);
+        }
+
+        .status-500 {
+            background: linear-gradient(45deg, #343a40, #6c757d);
+        }
+
+        .auth-note {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #856404;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .nav-tab {
+                padding: 12px;
+            }
+
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .params-table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-code"></i>
+                Simple Todo API
+            </h1>
+            <p class="subtitle">Complete REST API documentation for Todo Management</p>
+            <div class="base-url">
+                <strong>Base URL:</strong> http://localhost:3002/api
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('overview')">
+                <i class="fas fa-home"></i> Overview
+            </div>
+            <div class="nav-tab" onclick="showSection('auth')">
+                <i class="fas fa-shield-alt"></i> Authentication
+            </div>
+            <div class="nav-tab" onclick="showSection('todos')">
+                <i class="fas fa-tasks"></i> Todos
+            </div>
+            <div class="nav-tab" onclick="showSection('examples')">
+                <i class="fas fa-code"></i> Examples
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <div class="endpoint">
+                <h2><i class="fas fa-info-circle"></i> API Overview</h2>
+                <p class="endpoint-description">
+                    The Simple Todo API is a RESTful service built with Node.js, Express, and MongoDB.
+                    It provides user authentication and todo management capabilities with JWT-based security.
+                </p>
+
+                <div class="section">
+                    <h4><i class="fas fa-key"></i> Authentication</h4>
+                    <p>All todo endpoints require JWT authentication. Include the token in the Authorization header:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            Authorization Header
+                            <button class="copy-btn" onclick="copyToClipboard('auth-header')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="auth-header">Authorization: Bearer your_jwt_token_here</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-server"></i> Response Format</h4>
+                    <p>All API responses follow a consistent format:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            Standard Response
+                            <button class="copy-btn" onclick="copyToClipboard('response-format')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="response-format" class="language-json">{
+  "success": true/false,
+  "message": "Descriptive message",
+  "data": {
+    // Response data
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Error Handling</h4>
+                    <p>Error responses include appropriate HTTP status codes and descriptive messages.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authentication Section -->
+        <div id="auth" class="content-section">
+
+            <!-- Register -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/auth/register</span>
+                </div>
+                <p class="endpoint-description">Register a new user account</p>
+
+                <div class="section">
+                    <h4><i class="fas fa-arrow-down"></i> Request Body</h4>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>username</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="required">Required</span></td>
+                                <td>Unique username (3-30 characters)</td>
+                            </tr>
+                            <tr>
+                                <td>email</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="required">Required</span></td>
+                                <td>Valid email address</td>
+                            </tr>
+                            <tr>
+                                <td>password</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="required">Required</span></td>
+                                <td>Password (minimum 6 characters)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('register-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="register-curl" class="language-bash">curl -X POST http://localhost:3002/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "johndoe",
+    "email": "john@example.com",
+    "password": "securepassword123"
+  }'</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-arrow-up"></i> Responses</h4>
+                    <div class="status-code status-201">201</div> User registered successfully
+                    <div class="code-block">
+                        <div class="code-header">Success Response</div>
+                        <pre><code class="language-json">{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "_id": "607f1f77bcf86cd799439011",
+      "username": "johndoe",
+      "email": "john@example.com",
+      "createdAt": "2021-04-20T12:00:00.000Z",
+      "updatedAt": "2021-04-20T12:00:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="status-code status-400">400</div> Validation error
+                    <div class="code-block">
+                        <div class="code-header">Error Response</div>
+                        <pre><code class="language-json">{
+  "success": false,
+  "message": "Username, email, and password are required"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/auth/login</span>
+                </div>
+                <p class="endpoint-description">Authenticate user and get JWT token</p>
+
+                <div class="section">
+                    <h4><i class="fas fa-arrow-down"></i> Request Body</h4>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>email</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="required">Required</span></td>
+                                <td>User's email address</td>
+                            </tr>
+                            <tr>
+                                <td>password</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="required">Required</span></td>
+                                <td>User's password</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('login-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="login-curl" class="language-bash">curl -X POST http://localhost:3002/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "securepassword123"
+  }'</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-arrow-up"></i> Responses</h4>
+                    <div class="status-code status-200">200</div> Login successful
+                    <div class="code-block">
+                        <div class="code-header">Success Response</div>
+                        <pre><code class="language-json">{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "_id": "607f1f77bcf86cd799439011",
+      "username": "johndoe",
+      "email": "john@example.com"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Profile -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/auth/profile</span>
+                </div>
+                <p class="endpoint-description">Get current user profile information</p>
+
+                <div class="auth-note">
+                    <i class="fas fa-lock"></i>
+                    <span>This endpoint requires authentication</span>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('profile-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="profile-curl" class="language-bash">curl -X GET http://localhost:3002/api/auth/profile \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Todos Section -->
+        <div id="todos" class="content-section">
+
+            <!-- Get All Todos -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/todos</span>
+                </div>
+                <p class="endpoint-description">Get all todos for the authenticated user with optional filtering and
+                    pagination</p>
+
+                <div class="auth-note">
+                    <i class="fas fa-lock"></i>
+                    <span>This endpoint requires authentication</span>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-filter"></i> Query Parameters</h4>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>completed</td>
+                                <td><span class="type">boolean</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Filter by completion status (true/false)</td>
+                            </tr>
+                            <tr>
+                                <td>priority</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Filter by priority (low, medium, high)</td>
+                            </tr>
+                            <tr>
+                                <td>sortBy</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Sort field (createdAt, title, priority). Default: createdAt</td>
+                            </tr>
+                            <tr>
+                                <td>order</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Sort order (asc, desc). Default: desc</td>
+                            </tr>
+                            <tr>
+                                <td>page</td>
+                                <td><span class="type">number</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Page number for pagination. Default: 1</td>
+                            </tr>
+                            <tr>
+                                <td>limit</td>
+                                <td><span class="type">number</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Items per page. Default: 20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('get-todos-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="get-todos-curl" class="language-bash">curl -X GET "http://localhost:3002/api/todos?completed=false&priority=high&page=1&limit=10" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Todo -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/todos</span>
+                </div>
+                <p class="endpoint-description">Create a new todo item</p>
+
+                <div class="auth-note">
+                    <i class="fas fa-lock"></i>
+                    <span>This endpoint requires authentication</span>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-arrow-down"></i> Request Body</h4>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>title</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="required">Required</span></td>
+                                <td>Todo title (max 100 characters)</td>
+                            </tr>
+                            <tr>
+                                <td>description</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Todo description (max 500 characters)</td>
+                            </tr>
+                            <tr>
+                                <td>priority</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Priority level (low, medium, high). Default: medium</td>
+                            </tr>
+                            <tr>
+                                <td>dueDate</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="optional">Optional</span></td>
+                                <td>Due date in ISO format (YYYY-MM-DDTHH:MM:SSZ)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('create-todo-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="create-todo-curl" class="language-bash">curl -X POST http://localhost:3002/api/todos \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -d '{
+    "title": "Complete API documentation",
+    "description": "Write comprehensive API docs for the todo app",
+    "priority": "high",
+    "dueDate": "2025-12-31T23:59:59.000Z"
+  }'</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Todo -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method put">PUT</span>
+                    <span class="endpoint-path">/todos/:id</span>
+                </div>
+                <p class="endpoint-description">Update an existing todo item</p>
+
+                <div class="auth-note">
+                    <i class="fas fa-lock"></i>
+                    <span>This endpoint requires authentication and todo ownership</span>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-route"></i> Path Parameters</h4>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td><span class="type">string</span></td>
+                                <td><span class="required">Required</span></td>
+                                <td>MongoDB ObjectId of the todo</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('update-todo-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="update-todo-curl" class="language-bash">curl -X PUT http://localhost:3002/api/todos/607f1f77bcf86cd799439012 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -d '{
+    "title": "Updated todo title",
+    "completed": true
+  }'</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle Todo -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method patch">PATCH</span>
+                    <span class="endpoint-path">/todos/:id/toggle</span>
+                </div>
+                <p class="endpoint-description">Toggle todo completion status</p>
+
+                <div class="auth-note">
+                    <i class="fas fa-lock"></i>
+                    <span>This endpoint requires authentication and todo ownership</span>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('toggle-todo-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="toggle-todo-curl" class="language-bash">curl -X PATCH http://localhost:3002/api/todos/607f1f77bcf86cd799439012/toggle \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Todo -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="endpoint-path">/todos/:id</span>
+                </div>
+                <p class="endpoint-description">Delete a todo item</p>
+
+                <div class="auth-note">
+                    <i class="fas fa-lock"></i>
+                    <span>This endpoint requires authentication and todo ownership</span>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('delete-todo-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="delete-todo-curl" class="language-bash">curl -X DELETE http://localhost:3002/api/todos/607f1f77bcf86cd799439012 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Stats -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/todos/stats/summary</span>
+                </div>
+                <p class="endpoint-description">Get todo statistics for the authenticated user</p>
+
+                <div class="auth-note">
+                    <i class="fas fa-lock"></i>
+                    <span>This endpoint requires authentication</span>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-code"></i> Example Request</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            cURL
+                            <button class="copy-btn" onclick="copyToClipboard('stats-curl')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="stats-curl" class="language-bash">curl -X GET http://localhost:3002/api/todos/stats/summary \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fas fa-arrow-up"></i> Response</h4>
+                    <div class="code-block">
+                        <div class="code-header">Success Response</div>
+                        <pre><code class="language-json">{
+  "success": true,
+  "data": {
+    "stats": {
+      "total": 25,
+      "completed": 10,
+      "pending": 15,
+      "highPriority": 5,
+      "mediumPriority": 15,
+      "lowPriority": 5
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Examples Section -->
+        <div id="examples" class="content-section">
+            <div class="endpoint">
+                <h2><i class="fas fa-code"></i> JavaScript Examples</h2>
+
+                <div class="section">
+                    <h4><i class="fab fa-js-square"></i> User Registration & Login</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            JavaScript
+                            <button class="copy-btn" onclick="copyToClipboard('js-auth')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="js-auth" class="language-javascript">// Register a new user
+async function registerUser(userData) {
+  try {
+    const response = await fetch('http://localhost:3002/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData)
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Store the token
+      localStorage.setItem('token', data.data.token);
+      console.log('User registered:', data.data.user);
+    } else {
+      console.error('Registration failed:', data.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+// Login user
+async function loginUser(credentials) {
+  try {
+    const response = await fetch('http://localhost:3002/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials)
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Store the token
+      localStorage.setItem('token', data.data.token);
+      return data.data;
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
+}
+
+// Usage
+registerUser({
+  username: 'johndoe',
+  email: 'john@example.com',
+  password: 'securepassword123'
+});
+
+loginUser({
+  email: 'john@example.com',
+  password: 'securepassword123'
+});</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fab fa-js-square"></i> Todo Management</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            JavaScript
+                            <button class="copy-btn" onclick="copyToClipboard('js-todos')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="js-todos" class="language-javascript">// Helper function to get auth headers
+function getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+}
+
+// Get all todos
+async function getTodos(filters = {}) {
+  try {
+    const queryParams = new URLSearchParams(filters);
+    const response = await fetch(`http://localhost:3002/api/todos?${queryParams}`, {
+      headers: getAuthHeaders()
+    });
+    
+    const data = await response.json();
+    return data.success ? data.data : null;
+  } catch (error) {
+    console.error('Error fetching todos:', error);
+  }
+}
+
+// Create new todo
+async function createTodo(todoData) {
+  try {
+    const response = await fetch('http://localhost:3002/api/todos', {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(todoData)
+    });
+    
+    const data = await response.json();
+    return data.success ? data.data.todo : null;
+  } catch (error) {
+    console.error('Error creating todo:', error);
+  }
+}
+
+// Update todo
+async function updateTodo(id, updates) {
+  try {
+    const response = await fetch(`http://localhost:3002/api/todos/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(updates)
+    });
+    
+    const data = await response.json();
+    return data.success ? data.data.todo : null;
+  } catch (error) {
+    console.error('Error updating todo:', error);
+  }
+}
+
+// Toggle todo completion
+async function toggleTodo(id) {
+  try {
+    const response = await fetch(`http://localhost:3002/api/todos/${id}/toggle`, {
+      method: 'PATCH',
+      headers: getAuthHeaders()
+    });
+    
+    const data = await response.json();
+    return data.success ? data.data.todo : null;
+  } catch (error) {
+    console.error('Error toggling todo:', error);
+  }
+}
+
+// Delete todo
+async function deleteTodo(id) {
+  try {
+    const response = await fetch(`http://localhost:3002/api/todos/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    
+    const data = await response.json();
+    return data.success;
+  } catch (error) {
+    console.error('Error deleting todo:', error);
+    return false;
+  }
+}
+
+// Usage examples
+getTodos({ completed: false, priority: 'high' });
+
+createTodo({
+  title: 'Complete project',
+  description: 'Finish the todo app',
+  priority: 'high',
+  dueDate: '2025-12-31T23:59:59.000Z'
+});
+
+updateTodo('607f1f77bcf86cd799439012', { 
+  title: 'Updated title',
+  completed: true 
+});
+
+toggleTodo('607f1f77bcf86cd799439012');
+
+deleteTodo('607f1f77bcf86cd799439012');</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h4><i class="fab fa-react"></i> React Hook Example</h4>
+                    <div class="code-block">
+                        <div class="code-header">
+                            React Hook
+                            <button class="copy-btn" onclick="copyToClipboard('react-hook')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="react-hook" class="language-javascript">import { useState, useEffect } from 'react';
+
+// Custom hook for managing todos
+function useTodos() {
+  const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const getAuthHeaders = () => ({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+  });
+
+  const fetchTodos = async (filters = {}) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const queryParams = new URLSearchParams(filters);
+      const response = await fetch(`http://localhost:3002/api/todos?${queryParams}`, {
+        headers: getAuthHeaders()
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setTodos(data.data.todos);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('Failed to fetch todos');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createTodo = async (todoData) => {
+    try {
+      const response = await fetch('http://localhost:3002/api/todos', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(todoData)
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setTodos(prev => [data.data.todo, ...prev]);
+        return data.data.todo;
+      } else {
+        setError(data.message);
+        return null;
+      }
+    } catch (err) {
+      setError('Failed to create todo');
+      return null;
+    }
+  };
+
+  const updateTodo = async (id, updates) => {
+    try {
+      const response = await fetch(`http://localhost:3002/api/todos/${id}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(updates)
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setTodos(prev => 
+          prev.map(todo => 
+            todo._id === id ? data.data.todo : todo
+          )
+        );
+        return data.data.todo;
+      } else {
+        setError(data.message);
+        return null;
+      }
+    } catch (err) {
+      setError('Failed to update todo');
+      return null;
+    }
+  };
+
+  const deleteTodo = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3002/api/todos/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setTodos(prev => prev.filter(todo => todo._id !== id));
+        return true;
+      } else {
+        setError(data.message);
+        return false;
+      }
+    } catch (err) {
+      setError('Failed to delete todo');
+      return false;
+    }
+  };
+
+  return {
+    todos,
+    loading,
+    error,
+    fetchTodos,
+    createTodo,
+    updateTodo,
+    deleteTodo,
+    setError
+  };
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div class="footer">
+        <p>Simple Todo API Documentation | Built with ❤️ using Node.js, Express & MongoDB</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                // Show feedback
+                const button = event.target.closest('.copy-btn');
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                button.style.color = '#28a745';
+
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.style.display = 'block';
+            } else {
+                scrollTop.style.display = 'none';
+            }
+        });
+
+        // Initialize Prism.js
+        Prism.highlightAll();
+    </script>
+</body>
+
+</html>

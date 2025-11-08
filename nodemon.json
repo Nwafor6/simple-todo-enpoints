@@ -1,0 +1,21 @@
+{
+    "watch": [
+        "server.js",
+        "routes/",
+        "middleware/",
+        "utils/",
+        ".env"
+    ],
+    "ext": "js,json",
+    "ignore": [
+        "data/*.json",
+        "node_modules/",
+        "*.log"
+    ],
+    "env": {
+        "NODE_ENV": "development"
+    },
+    "delay": "1000",
+    "colours": true,
+    "legacyWatch": true
+}
