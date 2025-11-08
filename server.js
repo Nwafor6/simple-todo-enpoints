@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors({
     origin: process.env.NODE_ENV === 'production'
-        ? ['https://yourdomain.com'] // Add your production domain here
-        : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:5500'], // Development origins
+        ? ["*"] // Add your production domain here
+        : ["*"], // Development origins
     credentials: true
 }));
 

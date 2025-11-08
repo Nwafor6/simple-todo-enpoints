@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Dashboard - Simple Todo App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+</head>
+
+<body>
+    <!-- App Container -->
+    <div id="app" class="app">
+        <!-- Main Application Section -->
+        <div id="main-section" class="main-section">
+            <!-- Header -->
+            <nav class="navbar navbar-expand-lg navbar-dark header">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold fs-3" href="#">
+                        <i class="fas fa-tasks me-2"></i>Simple Todo
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center" type="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-2"></i>
+                            <span id="user-name">John Doe</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="dropdown-header">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user-circle fs-3 me-3"></i>
+                                    <div>
+                                        <div class="fw-semibold user-username">johndoe</div>
+                                        <div class="text-muted small user-email">john@example.com</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="index.html"><i
+                                        class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Stats Cards -->
+            <div class="container-fluid py-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card border-0 shadow-sm stat-card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3">
+                                    <i class="fas fa-list text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-value h4 mb-1 fw-bold" id="total-todos">12</div>
+                                    <div class="stat-label text-muted small">Total Todos</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card border-0 shadow-sm stat-card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-value h4 mb-1 fw-bold" id="completed-todos">7</div>
+                                    <div class="stat-label text-muted small">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card border-0 shadow-sm stat-card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3">
+                                    <i class="fas fa-clock text-warning"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-value h4 mb-1 fw-bold" id="pending-todos">5</div>
+                                    <div class="stat-label text-muted small">Pending</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card border-0 shadow-sm stat-card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3">
+                                    <i class="fas fa-exclamation-circle text-danger"></i>
+                                </div>
+                                <div>
+                                    <div class="stat-value h4 mb-1 fw-bold" id="high-priority-todos">3</div>
+                                    <div class="stat-label text-muted small">High Priority</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label for="search-input" class="form-label">Search</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="search-input"
+                                        placeholder="Search todos...">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="status-filter" class="form-label">Status</label>
+                                <select class="form-select" id="status-filter">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="priority-filter" class="form-label">Priority</label>
+                                <select class="form-select" id="priority-filter">
+                                    <option value="">All Priority</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="medium">Medium Priority</option>
+                                    <option value="low">Low Priority</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="sort-filter" class="form-label">Sort by</label>
+                                <select class="form-select" id="sort-filter">
+                                    <option value="createdAt-desc">Newest First</option>
+                                    <option value="createdAt-asc">Oldest First</option>
+                                    <option value="title-asc">Title A-Z</option>
+                                    <option value="title-desc">Title Z-A</option>
+                                    <option value="priority-desc">Priority High-Low</option>
+                                    <option value="dueDate-asc">Due Date</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#todo-modal">
+                                    <i class="fas fa-plus me-2"></i>Add Todo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Todos Section -->
+                <div class="row">
+                    <div class="col-12">
+                        <div id="todo-list">
+                            <!-- Sample Todo Items -->
+                            <div class="card border-0 shadow-sm mb-3 todo-item">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="checkbox" id="todo1">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h5 class="card-title mb-0">Complete project proposal</h5>
+                                                <span class="badge bg-danger">High</span>
+                                            </div>
+                                            <p class="card-text text-muted mb-2">Write and submit the Q4 project
+                                                proposal for the new client dashboard</p>
+                                            <div class="d-flex flex-wrap gap-3 text-muted small">
+                                                <span><i class="fas fa-calendar me-1"></i>Due: Nov 11, 2025</span>
+                                                <span><i class="fas fa-clock me-1"></i>Created: Nov 6, 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link text-muted" data-bs-toggle="dropdown">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item edit-todo" href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#todo-modal" data-todo-id="1"><i
+                                                            class="fas fa-edit me-2"></i>Edit</a></li>
+                                                <li><a class="dropdown-item text-danger delete-todo" href="#"
+                                                        data-todo-id="1"><i class="fas fa-trash me-2"></i>Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card border-0 shadow-sm mb-3 todo-item todo-completed">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="checkbox" id="todo2" checked>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h5 class="card-title mb-0 text-decoration-line-through text-muted">
+                                                    Review code changes</h5>
+                                                <span class="badge bg-warning">Medium</span>
+                                            </div>
+                                            <p class="card-text text-muted mb-2">Review pull requests from the
+                                                development team</p>
+                                            <div class="d-flex flex-wrap gap-3 text-muted small">
+                                                <span><i class="fas fa-clock me-1"></i>Created: Nov 7, 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link text-muted" data-bs-toggle="dropdown">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item edit-todo" href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#todo-modal" data-todo-id="2"><i
+                                                            class="fas fa-edit me-2"></i>Edit</a></li>
+                                                <li><a class="dropdown-item text-danger delete-todo" href="#"
+                                                        data-todo-id="2"><i class="fas fa-trash me-2"></i>Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card border-0 shadow-sm mb-3 todo-item">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="checkbox" id="todo3">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h5 class="card-title mb-0">Update documentation</h5>
+                                                <span class="badge bg-secondary">Low</span>
+                                            </div>
+                                            <p class="card-text text-muted mb-2">Update API documentation with new
+                                                endpoints</p>
+                                            <div class="d-flex flex-wrap gap-3 text-muted small">
+                                                <span><i class="fas fa-calendar me-1"></i>Due: Nov 15, 2025</span>
+                                                <span><i class="fas fa-clock me-1"></i>Created: Nov 5, 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link text-muted" data-bs-toggle="dropdown">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item edit-todo" href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#todo-modal" data-todo-id="3"><i
+                                                            class="fas fa-edit me-2"></i>Edit</a></li>
+                                                <li><a class="dropdown-item text-danger delete-todo" href="#"
+                                                        data-todo-id="3"><i class="fas fa-trash me-2"></i>Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State (hidden by default) -->
+                        <div id="empty-state" class="text-center py-5" style="display: none;">
+                            <div class="text-muted mb-4">
+                                <i class="fas fa-clipboard-list fa-4x"></i>
+                            </div>
+                            <h3 class="text-muted mb-3">No todos yet</h3>
+                            <p class="text-muted mb-4">Create your first todo to get started organizing your tasks!</p>
+                            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#todo-modal">
+                                <i class="fas fa-plus me-2"></i>Add Your First Todo
+                            </button>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Todo pagination" class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button class="btn btn-outline-secondary" id="prev-btn" disabled>
+                                    <i class="fas fa-chevron-left me-1"></i>Previous
+                                </button>
+                                <span class="text-muted" id="page-info">Page 1 of 1</span>
+                                <button class="btn btn-outline-secondary" id="next-btn" disabled>
+                                    Next<i class="fas fa-chevron-right ms-1"></i>
+                                </button>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Add Todo Button -->
+    <button class="btn btn-primary floating-add-btn d-md-none" data-bs-toggle="modal" data-bs-target="#todo-modal">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Todo Modal -->
+    <div class="modal fade" id="todo-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Add New Todo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="todo-form">
+                        <div class="mb-3">
+                            <label for="todo-title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="todo-title" name="title"
+                                placeholder="Enter todo title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="todo-description" class="form-label">Description (Optional)</label>
+                            <textarea class="form-control" id="todo-description" name="description" rows="3"
+                                placeholder="Enter todo description (optional)"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="todo-priority" class="form-label">Priority</label>
+                                <select class="form-select" id="todo-priority" name="priority" required>
+                                    <option value="low">Low Priority</option>
+                                    <option value="medium" selected>Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="todo-due-date" class="form-label">Due Date</label>
+                                <input type="datetime-local" class="form-control" id="todo-due-date" name="dueDate">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="todo-form" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Save Todo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal fade" id="confirm-modal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="text-warning mb-3">
+                        <i class="fas fa-exclamation-triangle fa-3x"></i>
+                    </div>
+                    <p>Are you sure you want to delete this todo? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
