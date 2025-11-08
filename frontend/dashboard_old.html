@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Dashboard - Simple Todo App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- App Container -->
+    <div id="app" class="app">
+        <!-- Main Application Section -->
+        <div id="main-section" class="main-section">
+            <!-- Header -->
+            <nav class="navbar navbar-expand-lg navbar-dark header">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold" href="#">
+                        <i class="fas fa-tasks me-2"></i>Simple Todo
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center" type="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-2"></i>
+                            <span id="user-name">John Doe</span>
+                        </button>
+                        <div id="user-dropdown" class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-username">johndoe</div>
+                                    <div class="user-email">john@example.com</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                Profile
+                            </button>
+                            <a href="index.html" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="total-todos">12</div>
+                        <div class="stat-label">Total Todos</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="completed-todos">7</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="pending-todos">5</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon high-priority">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="high-priority-todos">3</div>
+                        <div class="stat-label">High Priority</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Todo Controls -->
+        <section class="controls-section">
+            <div class="controls-content">
+                <div class="controls-left">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search todos...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="status-filter">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="priority-filter">
+                            <option value="">All Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <select id="sort-filter">
+                            <option value="createdAt-desc">Newest First</option>
+                            <option value="createdAt-asc">Oldest First</option>
+                            <option value="title-asc">Title A-Z</option>
+                            <option value="title-desc">Title Z-A</option>
+                            <option value="priority-desc">Priority High-Low</option>
+                            <option value="dueDate-asc">Due Date</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="controls-right">
+                    <button class="btn btn-primary add-todo-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Todo
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Todos Section -->
+        <section class="todos-section">
+            <div id="todo-list" class="todo-list">
+                <!-- Sample Todo Items -->
+                <div class="todo-item">
+                    <div class="todo-main">
+                        <div class="todo-checkbox">
+                            <input type="checkbox">
+                        </div>
+                        <div class="todo-content">
+                            <div class="todo-header-info">
+                                <h3 class="todo-title">Complete project proposal</h3>
+                                <span class="todo-priority high">high</span>
+                            </div>
+                            <p class="todo-description">Write and submit the Q4 project proposal for the new client
+                                dashboard</p>
+                            <div class="todo-meta">
+                                <span class="todo-due-date">
+                                    <i class="fas fa-calendar"></i>
+                                    Due: Nov 11, 2025
+                                </span>
+                                <span class="todo-created">
+                                    <i class="fas fa-clock"></i>
+                                    Created: Nov 6, 2025
+                                </span>
+                            </div>
+                        </div>
+                        <div class="todo-actions">
+                            <button class="action-btn edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item completed">
+                    <div class="todo-main">
+                        <div class="todo-checkbox">
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="todo-content">
+                            <div class="todo-header-info">
+                                <h3 class="todo-title">Review code changes</h3>
+                                <span class="todo-priority medium">medium</span>
+                            </div>
+                            <p class="todo-description">Review pull requests from the development team</p>
+                            <div class="todo-meta">
+                                <span class="todo-created">
+                                    <i class="fas fa-clock"></i>
+                                    Created: Nov 7, 2025
+                                </span>
+                            </div>
+                        </div>
+                        <div class="todo-actions">
+                            <button class="action-btn edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-item">
+                    <div class="todo-main">
+                        <div class="todo-checkbox">
+                            <input type="checkbox">
+                        </div>
+                        <div class="todo-content">
+                            <div class="todo-header-info">
+                                <h3 class="todo-title">Update documentation</h3>
+                                <span class="todo-priority low">low</span>
+                            </div>
+                            <p class="todo-description">Update API documentation with new endpoints</p>
+                            <div class="todo-meta">
+                                <span class="todo-due-date">
+                                    <i class="fas fa-calendar"></i>
+                                    Due: Nov 15, 2025
+                                </span>
+                                <span class="todo-created">
+                                    <i class="fas fa-clock"></i>
+                                    Created: Nov 5, 2025
+                                </span>
+                            </div>
+                        </div>
+                        <div class="todo-actions">
+                            <button class="action-btn edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (hidden by default, show when no todos) -->
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3>No todos yet</h3>
+                <p>Create your first todo to get started organizing your tasks!</p>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Add Your First Todo
+                </button>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button id="prev-btn" class="btn btn-secondary" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </button>
+                <span id="page-info">Page 1 of 1</span>
+                <button id="next-btn" class="btn btn-secondary" disabled>
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+    </div>
+    </div>
+
+    <!-- Floating Add Todo Button (Mobile-friendly) -->
+    <button class="floating-add-btn" title="Add Todo">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Todo Modal -->
+    <div id="todo-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Todo</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="todo-form">
+                    <div class="form-group">
+                        <label for="todo-title">Title</label>
+                        <input type="text" id="todo-title" name="title" placeholder="Enter todo title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="todo-description">Description (Optional)</label>
+                        <textarea id="todo-description" name="description" rows="3"
+                            placeholder="Enter todo description (optional)"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="todo-priority">Priority</label>
+                            <select id="todo-priority" name="priority" required>
+                                <option value="low">Low Priority</option>
+                                <option value="medium" selected>Medium Priority</option>
+                                <option value="high">High Priority</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="todo-due-date">Due Date</label>
+                            <input type="datetime-local" id="todo-due-date" name="dueDate">
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Todo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>Confirm Delete</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-content">
+                    <div class="confirm-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <p>Are you sure you want to delete this todo? This action cannot be undone.</p>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container (for future JS implementation) -->
+    <div id="toast-container" class="toast-container"></div>
+</body>
+
+</html>
