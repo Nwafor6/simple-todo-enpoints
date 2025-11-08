@@ -31,8 +31,7 @@ router.get('/', async (req, res) => {
         const todos = await Todo.find(filter)
             .sort(sort)
             .skip(skip)
-            .limit(parseInt(limit))
-            .populate('userId', 'username email');
+            .limit(parseInt(limit));
 
         const totalTodos = await Todo.countDocuments(filter);
         const totalPages = Math.ceil(totalTodos / parseInt(limit));
@@ -42,9 +41,10 @@ router.get('/', async (req, res) => {
             data: {
                 todos,
                 pagination: {
-                    currentPage: parseInt(page),
+                    page: parseInt(page),
+                    limit: parseInt(limit),
+                    total: totalTodos,
                     totalPages,
-                    totalTodos,
                     hasNext: parseInt(page) < totalPages,
                     hasPrev: parseInt(page) > 1
                 }
@@ -237,7 +237,6 @@ router.patch('/:id/toggle', async (req, res) => {
         // Toggle completion status
         todo.completed = !todo.completed;
         await todo.save();
-        await todo.populate('userId', 'username email');
 
         res.json({
             success: true,
@@ -247,6 +246,53 @@ router.patch('/:id/toggle', async (req, res) => {
 
     } catch (error) {
         console.error('Toggle todo error:', error);
+
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid todo ID format'
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
+// Mark todo as complete
+router.patch('/:id/complete', async (req, res) => {
+    try {
+        const todo = await Todo.findById(req.params.id);
+
+        if (!todo) {
+            return res.status(404).json({
+                success: false,
+                message: 'Todo not found'
+            });
+        }
+
+        // Check ownership
+        if (todo.userId.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied. This todo does not belong to you.'
+            });
+        }
+
+        // Mark as complete
+        todo.completed = true;
+        await todo.save();
+
+        res.json({
+            success: true,
+            message: 'Todo marked as complete',
+            data: { todo }
+        });
+
+    } catch (error) {
+        console.error('Complete todo error:', error);
 
         if (error.name === 'CastError') {
             return res.status(400).json({
